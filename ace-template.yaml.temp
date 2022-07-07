@@ -1,0 +1,30 @@
+apiVersion: appconnect.ibm.com/v1beta1
+kind: IntegrationServer
+metadata:
+  name: unique_name
+  namespace: cp4i-poc
+spec:
+  license:
+    accept: true
+    license: L-APEH-C9NCK6
+    use: CloudPakForIntegrationNonProduction
+  pod:
+    containers:
+      runtime:
+        resources:
+          limits:
+            cpu: 300m
+            memory: 368Mi
+          requests:
+            cpu: 300m
+            memory: 368Mi
+  router:
+    timeout: 120s
+  service:
+    endpointType: http
+  adminServerSecure: true
+  createDashboardUsers: true
+  designerFlowsOperationMode: disabled
+  enableMetrics: true
+  replicas: 1
+  version: '12.0'
