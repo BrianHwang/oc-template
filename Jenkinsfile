@@ -60,7 +60,7 @@ podTemplate(
                     sed -e "s/{{NAME}}/$SERVER_NAME/g" \
                         -e "s/{{NAMESPACE}}/$NAMESPACE/g" \
                         -e "s/{{REPO_PATH}}/$REPO_PATH/g" \
-                        -e "s/{{BAR}}/$BAR_NAME/g" \
+                        -e "s/{{BAR_NAME}}/$BAR_NAME/g" \
                         -e "s/{{CONFIGURATION_LIST}}/$CONFIGURATION_LIST/g" \
                         ace-template.yaml.temp > ace.yaml
                     
