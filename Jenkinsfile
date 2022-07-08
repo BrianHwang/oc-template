@@ -4,7 +4,13 @@ pipeline {
     stages {
         stage('Hello') {
             steps {
-                sh "oc get po -n cp4i-poc"
+				sh label: '', script: '''#!/bin/bash
+                    set -e
+                    cd template
+                    cp ace-template.yaml.temp > ace-template.yaml
+					cat ace-template.yaml
+                    oc apply -f integration-server.yaml
+                    '''
             }
         }
     }
