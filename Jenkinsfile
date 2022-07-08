@@ -17,6 +17,13 @@ pipeline {
         stage('Hello') {
             steps {
 				sh label: '', script: '''#!/bin/bash
+				    echo ${templateFileLocation}
+					echo ${name}
+					echo ${namespace}
+					echo ${repo}
+					echo ${barName}
+					echo ${configurationList}
+					echo ''
                     set -e
                     cd ${templateFileLocation}
 					BAR_FILE="${repo}/${barName}"
