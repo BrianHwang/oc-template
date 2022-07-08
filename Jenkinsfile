@@ -56,13 +56,13 @@ podTemplate(
 					echo "****************************************************************"
                     cd $PROJECT_DIR
                     cat ace-template.yaml.temp
+					echo "****************************************************************"
                     sed -e "s/{{NAME}}/$SERVER_NAME/g" \
                         -e "s/{{NAMESPACE}}/$NAMESPACE/g" \
                         -e "s/{{REPO_PATH}}/$REPO_PATH/g" \
                         -e "s/{{BAR}}/$BAR_NAME/g" \
                         -e "s/{{CONFIGURATION_LIST}}/$CONFIGURATION_LIST/g" \
                         ace-template.yaml.temp > ace.yaml
-                    echo "****************************************************************"
                     
                     cat ace.yaml
                    
