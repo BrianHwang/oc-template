@@ -1,40 +1,42 @@
-def templateFileLocation = "template"
+def ocImage = "image-registry.openshift-image-registry.svc:5000/cp4i-poc/oc-deploy:latest"
 
-def name = "HelloWorld"
 def namespace = "cp4i-poc"
-
-def repo = "https://github.com/BrianHwang/ace-bar/raw/main"
-def barName = "MC_HelloWorld.bar"
-
+def serverName = "HelloWorld"
+def barName = "https://github.com/BrianHwang/ace-bar/raw/main/MC_HelloWorld.bar"
 def configurationList = "brian-github"
+def projectDir = "template"
 
 
-   
-pipeline {
-    agent any
-
-    stages {
-        stage('Hello') {
-            steps {
-				sh label: '', script: '''#!/bin/bash
-				    echo ${templateFileLocation}
-					echo ${name}
-					echo ${namespace}
-					echo ${repo}
-					echo ${barName}
-					echo ${configurationList}
-					echo ''
-                    set -e
-                    cd ${templateFileLocation}
-					BAR_FILE="${repo}/${barName}"
-					cat ace-template.yaml.temp
-					sed -e "s//{{NAME}}/${name}/g" \
-					    -e "s//{{NAMESPACE}}/${namespace}/g" \
-					    -e "s//{{BAR}}/$BAR_FILE/g" \
-					    -e "s//{{CONFIGURATION_LIST}}/${configurationList}/g" \
-						ace-template.yaml.temp > ace.yaml
+podTemplate(
+    serviceAccount: "jenkins",
+    containers: [
+       
+        containerTemplate(name: 'oc-deploy', image: "${ocImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
+          envVars: [
+            envVar(key: 'NAMESPACE', value: "${namespace}"),
+            envVar(key: 'SERVER_NAME', value: "${serverName}"),
+            envVar(key: 'BAR_NAME', value: "${barName}"),            
+            envVar(key: 'CONFIGURATION_LIST', value: "${configurationList}"),
+            envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
+        ])
+  ]) {
+    node(POD_LABEL) {
+        stage('Deploy Intergration Server') {
+            container("oc-deploy") {
+                sh label: '', script: '''#!/bin/bash
+                    echo "****************************************************************
+					set -e
+                    cd $PROJECT_DIR
+                    BAR_FILE="${BAR_NAME}_${BUILD_NUMBER}.bar"
+                    cat integration-server.yaml.tmpl
+                    sed -e "s/{{NAME}}/$SERVER_NAME/g" \
+                        -e "s/{{NAMESPACE}}/$NAMESPACE/g" \
+                        -e "s/{{BAR}}/$BAR_NAME/g" \
+                        -e "s/{{CONFIGURATION_LIST}}/$CONFIGURATION_LIST/g" \
+                        ace-template.yaml.temp > ace.yaml
                     cat ace.yaml
                     oc apply -f ace.yaml
+					echo "****************************************************************
                     '''
             }
         }
