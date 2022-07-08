@@ -3,7 +3,7 @@ def ocImage = "image-registry.openshift-image-registry.svc:5000/cp4i-poc/oc-depl
 def namespace = "cp4i-poc"
 def serverName = "HelloWorld"
 
-def repoPath = "https://github.com/BrianHwang/ace-bar/raw/main"
+//def repoPath = "https://github.com/BrianHwang/ace-bar/raw/main"
 def barName = "MC_HelloWorld.bar"
 
 def configurationList = "brian-github"
@@ -59,7 +59,7 @@ podTemplate(
 					echo "****************************************************************"
                     sed -e "s/{{NAME}}/$SERVER_NAME/g" \
                         -e "s/{{NAMESPACE}}/$NAMESPACE/g" \
-                        -e "s/{{REPO_PATH}}/$REPO_PATH/g" \
+//                        -e "s/{{REPO_PATH}}/$REPO_PATH/g" \
                         -e "s/{{BAR_NAME}}/$BAR_NAME/g" \
                         -e "s/{{CONFIGURATION_LIST}}/$CONFIGURATION_LIST/g" \
                         ace-template.yaml.temp > ace.yaml
