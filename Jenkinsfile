@@ -4,7 +4,9 @@ def namespace = "cp4i-poc"
 def serverName = "HelloWorld"
 def barName = "https://github.com/BrianHwang/ace-bar/raw/main/MC_HelloWorld.bar"
 def configurationList = "brian-github"
-def projectDir = "template"
+def projectDir = "ace-build"
+def gitDomain = "github.com"
+def gitRepo = "https://github.com/BrianHwang/oc-template.git"
 
 
 podTemplate(
@@ -18,15 +20,33 @@ podTemplate(
             envVar(key: 'BAR_NAME', value: "${barName}"),            
             envVar(key: 'CONFIGURATION_LIST', value: "${configurationList}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
-        ])
+        ]),
+        containerTemplate(name: 'jnlp', image: "jenkins/jnlp-slave:latest", ttyEnabled: true, workingDir: "/home/jenkins", 
+		  envVars: [
+            envVar(key: 'HOME', value: '/home/jenkins'),
+            envVar(key: 'GIT_DOMAIN', value: "${gitDomain}"),
+            envVar(key: 'GIT_REPO', value: "${gitRepo}"),
+            envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
+        ])		
   ]) {
     node(POD_LABEL) {
+        stage('Git Checkout') {
+            container("jnlp") {
+                sh """
+                    git clone $GIT_REPO
+                    cp -p $CP4I_DEVOPS_UTILS_DIR/templates/integration-server.yaml.tmpl $PROJECT_DIR
+                    cp -p $CP4I_DEVOPS_UTILS_DIR/scripts/*.sh $PROJECT_DIR
+                    ls -la
+                """
+            }
+        }	
         stage('Deploy Intergration Server') {
             container("oc-deploy") {
                 sh label: '', script: '''#!/bin/bash
                     echo "****************************************************************
 					set -e
                     cd $PROJECT_DIR
+					cd template
                     BAR_FILE="${BAR_NAME}_${BUILD_NUMBER}.bar"
                     cat integration-server.yaml.tmpl
                     sed -e "s/{{NAME}}/$SERVER_NAME/g" \
