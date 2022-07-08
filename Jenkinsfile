@@ -18,7 +18,7 @@ podTemplate(
         containerTemplate(name: 'oc-deploy', image: "${ocImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
           envVars: [
             envVar(key: 'NAMESPACE', value: "${namespace}"),
-            envVar(key: 'SERVER_NAME', value: "${serverName}_${BUILD_NUMBER}"),
+            envVar(key: 'SERVER_NAME', value: "${serverName}-${BUILD_NUMBER}"),
             envVar(key: 'BAR_NAME', value: "${barName}"),            
             envVar(key: 'CONFIGURATION_LIST', value: "${configurationList}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
