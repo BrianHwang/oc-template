@@ -2,7 +2,10 @@ def ocImage = "image-registry.openshift-image-registry.svc:5000/cp4i-poc/oc-depl
 
 def namespace = "cp4i-poc"
 def serverName = "HelloWorld"
-def barName = "https://github.com/BrianHwang/ace-bar/raw/main/MC_HelloWorld.bar"
+
+def repoPath = "https://github.com/BrianHwang/ace-bar/raw/main"
+def barName = "MC_HelloWorld.bar"
+
 def configurationList = "brian-github"
 def projectDir = "oc-template"
 def gitDomain = "github.com"
@@ -17,6 +20,7 @@ podTemplate(
           envVars: [
             envVar(key: 'NAMESPACE', value: "${namespace}"),
             envVar(key: 'SERVER_NAME', value: "${serverName}"),
+            envVar(key: 'REPO_PATH', value: "${repoPath}"),
             envVar(key: 'BAR_NAME', value: "${barName}"),            
             envVar(key: 'CONFIGURATION_LIST', value: "${configurationList}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
@@ -33,8 +37,15 @@ podTemplate(
         stage('Git Checkout') {
             container("jnlp") {
                 sh """
+                    echo "**************************************************************"
                     git clone $GIT_REPO
+                    cp -p $PROJECT_DIR/template/ace-template.yaml.temp $PROJECT_DIR
+                    pwd
                     ls -la
+                    cd $PROJECT_DIR
+                    pwd
+                    ls -la
+                    echo "**************************************************************"
                 """
             }
         }	
@@ -44,17 +55,20 @@ podTemplate(
 					set -e
 					echo "****************************************************************"
                     cd $PROJECT_DIR
-					cd template
-                    BAR_FILE="${BAR_NAME}_${BUILD_NUMBER}.bar"
-                    cat integration-server.yaml.tmpl
+                    cat ace-template.yaml.temp
                     sed -e "s/{{NAME}}/$SERVER_NAME/g" \
                         -e "s/{{NAMESPACE}}/$NAMESPACE/g" \
+                        -e "s/{{REPO_PATH}}/$REPO_PATH/g" \
                         -e "s/{{BAR}}/$BAR_NAME/g" \
                         -e "s/{{CONFIGURATION_LIST}}/$CONFIGURATION_LIST/g" \
                         ace-template.yaml.temp > ace.yaml
+                    echo "****************************************************************"
+                    
                     cat ace.yaml
-                    oc apply -f ace.yaml
+                   
 					echo "****************************************************************"
+					
+					oc apply -f ace.yaml
                     '''
             }
         }

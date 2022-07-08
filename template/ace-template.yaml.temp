@@ -28,5 +28,5 @@ spec:
     endpointType: http
   version: '12.0'
   replicas: 1
-  barURL: {{BAR}}
+  barURL: https://github.com/BrianHwang/ace-bar/raw/main/{{BAR}}
   configurations: [{{CONFIGURATION_LIST}} ]
