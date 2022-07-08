@@ -1,9 +1,10 @@
 apiVersion: appconnect.ibm.com/v1beta1
 kind: IntegrationServer
 metadata:
-  name: unique_name
+  name: helloworld-2
   namespace: cp4i-poc
 spec:
+  enableMetrics: true
   license:
     accept: true
     license: L-APEH-C9NCK6
@@ -18,13 +19,15 @@ spec:
           requests:
             cpu: 300m
             memory: 368Mi
+  adminServerSecure: true
   router:
     timeout: 120s
+  designerFlowsOperationMode: disabled
+  createDashboardUsers: false
   service:
     endpointType: http
-  adminServerSecure: true
-  createDashboardUsers: true
-  designerFlowsOperationMode: disabled
-  enableMetrics: true
-  replicas: 1
   version: '12.0'
+  replicas: 1
+  barURL: 'https://github.com/BrianHwang/ace-bar/raw/main/MC_HelloWorld.bar'
+  configurations:
+    - brian-github
