@@ -4,7 +4,7 @@ def namespace = "cp4i-poc"
 def serverName = "HelloWorld"
 def barName = "https://github.com/BrianHwang/ace-bar/raw/main/MC_HelloWorld.bar"
 def configurationList = "brian-github"
-def projectDir = "ace-build"
+def projectDir = "oc-template"
 def gitDomain = "github.com"
 def gitRepo = "https://github.com/BrianHwang/oc-template.git"
 
