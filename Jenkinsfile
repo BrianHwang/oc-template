@@ -40,9 +40,9 @@ podTemplate(
         }	
         stage('Deploy Intergration Server') {
             container("oc-deploy") {
-                sh label: '', script: '''#!/bin/bash
-                    echo "****************************************************************
+                sh label: '', script: '''#!/bin/bash                    
 					set -e
+					echo "****************************************************************"
                     cd $PROJECT_DIR
 					cd template
                     BAR_FILE="${BAR_NAME}_${BUILD_NUMBER}.bar"
@@ -54,7 +54,7 @@ podTemplate(
                         ace-template.yaml.temp > ace.yaml
                     cat ace.yaml
                     oc apply -f ace.yaml
-					echo "****************************************************************
+					echo "****************************************************************"
                     '''
             }
         }
