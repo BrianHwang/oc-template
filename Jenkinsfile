@@ -3,7 +3,6 @@ def ocImage = "image-registry.openshift-image-registry.svc:5000/cp4i-poc/oc-depl
 def namespace = "cp4i-poc"
 def serverName = "HelloWorld"
 
-//def repoPath = "https://github.com/BrianHwang/ace-bar/raw/main"
 def barName = "MC_HelloWorld.bar"
 
 def configurationList = "brian-github"
