@@ -1,7 +1,7 @@
 def ocImage = "image-registry.openshift-image-registry.svc:5000/cp4i-poc/oc-deploy:latest"
 
 def namespace = "cp4i-poc"
-def serverName = "HelloWorld"
+def serverName = "helloworld"
 
 def barName = "MC_HelloWorld.bar"
 
@@ -19,7 +19,6 @@ podTemplate(
           envVars: [
             envVar(key: 'NAMESPACE', value: "${namespace}"),
             envVar(key: 'SERVER_NAME', value: "${serverName}"),
-            envVar(key: 'REPO_PATH', value: "${repoPath}"),
             envVar(key: 'BAR_NAME', value: "${barName}"),            
             envVar(key: 'CONFIGURATION_LIST', value: "${configurationList}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
@@ -56,7 +55,8 @@ podTemplate(
                     cd $PROJECT_DIR
                     cat ace-template.yaml.temp
 					echo "****************************************************************"
-                    sed -e "s/{{NAME}}/$SERVER_NAME/g" \
+					IS_NAME = ${NAME}_${BUILD_NUMBER}
+                    sed -e "s/{{NAME}}/$IS_NAME/g" \
                         -e "s/{{NAMESPACE}}/$NAMESPACE/g" \
                         -e "s/{{BAR_NAME}}/$BAR_NAME/g" \
                         -e "s/{{CONFIGURATION_LIST}}/$CONFIGURATION_LIST/g" \
