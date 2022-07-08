@@ -55,8 +55,8 @@ podTemplate(
                     cd $PROJECT_DIR
                     cat ace-template.yaml.temp
 					echo "****************************************************************"
-					IS_NAME = ${NAME}_${BUILD_NUMBER}
-                    sed -e "s/{{NAME}}/$IS_NAME/g" \
+					NAME = ${SERVER_NAME}_${BUILD_NUMBER}
+                    sed -e "s/{{NAME}}/$NAME/g" \
                         -e "s/{{NAMESPACE}}/$NAMESPACE/g" \
                         -e "s/{{BAR_NAME}}/$BAR_NAME/g" \
                         -e "s/{{CONFIGURATION_LIST}}/$CONFIGURATION_LIST/g" \
