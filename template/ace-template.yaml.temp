@@ -1,8 +1,8 @@
 apiVersion: appconnect.ibm.com/v1beta1
 kind: IntegrationServer
 metadata:
-  name: helloworld-2
-  namespace: cp4i-poc
+  name: {{NAME}}
+  namespace: {{NAMESPACE}}
 spec:
   enableMetrics: true
   license:
@@ -28,6 +28,5 @@ spec:
     endpointType: http
   version: '12.0'
   replicas: 1
-  barURL: 'https://github.com/BrianHwang/ace-bar/raw/main/MC_HelloWorld.bar'
-  configurations:
-    - brian-github
+  barURL: {{BAR}}
+  configurations: [{{CONFIGURATION_LIST}} ]
