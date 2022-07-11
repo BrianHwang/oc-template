@@ -38,7 +38,7 @@ podTemplate(
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
             envVar(key: 'SOURCE_CODE_DIR', value: "${sourcecodeDir}"),
         ]),
-        containerTemplate(name: 'ace-bar-builder', image: "${buildBarImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
+        containerTemplate(name: 'ace-bar-builder', image: "${barBuilderImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
           envVars: [
             envVar(key: 'BAR_NAME', value: "${barName}"),
             envVar(key: 'APP_NAME', value: "${appName}"),
