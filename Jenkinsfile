@@ -31,6 +31,8 @@ podTemplate(
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
             envVar(key: 'BAR_REPO', value: "${barRepo}"),
             envVar(key: 'APP_NAME', value: "${appName}"),
+            envVar(key: 'GIT_USER', value: "id.brian.hwang@gmail.com"),
+            envVar(key: 'GIT_PASSWORD', value: "Selmar@1977"),
         ]),
         containerTemplate(name: 'oc-deploy', image: "${ocImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
           envVars: [
@@ -83,14 +85,16 @@ podTemplate(
         }
         stage('Upload Bar File') {
             container("jnlp") {
+                withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', passwordVariable: 'Selmar@1977', usernameVariable: 'id.brian.hwang@gmail.com')]) {
                     sh label: '', script: '''#!/bin/bash
                         echo "********  Upload Bar File ******************************************************"
                         set -e 
                         git config --global user.email "brian_hwang@itss.vic.gov.au"
+                        git config user.name brian_hwang
                         BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
                         pwd
                         ls -lha
-                        git clone https%3A%2F%2Fid.brian.hwang%40gmail.com%3ASelmar%401977%40github.com%2FBrianHwang%2Face-bar.git
+                        git clone $BAR_REPO
                         echo "after clone"
                         ls -lha
                         cp -p $BAR_FILE ace-bar
@@ -100,9 +104,11 @@ podTemplate(
                         git add $BAR_FILE
                         git status
                         git commit -m "jenkin build bar file"
-                        git push origin main
+                        def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
+                        echo $encodedPassword
+                        git push https://${GIT_USER}:${encodedPassword}@github.com/BrianHwang/ace-bar.git
                         '''
-                
+                }
             }
         }	
         stage('Deploy Intergration Server') {
