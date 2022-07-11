@@ -3,6 +3,7 @@ def barBuilderImage = "image-registry.openshift-image-registry.svc:5000/cp4i-poc
 
 def gitRepo = "https://github.com/BrianHwang/oc-template.git"
 def aceSourceCodeRepo = "https://github.com/BrianHwang/MC_HelloWorld.git"
+def barRepo = "https://github.com/BrianHwang/ace-bar.git"
 
 def namespace = "cp4i-poc"
 def serverName = "helloworld"
@@ -37,6 +38,7 @@ podTemplate(
             envVar(key: 'CONFIGURATION_LIST', value: "${configurationList}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
             envVar(key: 'SOURCE_CODE_DIR', value: "${sourcecodeDir}"),
+            envVar(key: 'BAR_REPO', value: "${barRepo}"),
         ]),
         containerTemplate(name: 'ace-bar-builder', image: "${barBuilderImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
           envVars: [
@@ -81,9 +83,14 @@ podTemplate(
         stage('Upload Bar File') {
             container("oc-deploy") {
                     sh label: '', script: '''#!/bin/bash
+                        echo "********  Upload Bar File ******************************************************"
                         set -e 
                         ls -lha
-                        echo "*** TODO : FILE UPLOAD *******
+                        BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
+                        git clone $BAR_REPO
+                        git add $BAR_FILE
+                        git commit -m "jenkin build commit bar file"
+                        git push origin main
                         '''
                 
             }
