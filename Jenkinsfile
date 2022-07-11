@@ -29,6 +29,7 @@ podTemplate(
             envVar(key: 'GIT_REPO', value: "${gitRepo}"),
             envVar(key: 'GIT_ACE_REPO', value: "${aceSourceCodeRepo}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
+            envVar(key: 'BAR_REPO', value: "${barRepo}"),
         ]),
         containerTemplate(name: 'oc-deploy', image: "${ocImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
           envVars: [
@@ -38,7 +39,6 @@ podTemplate(
             envVar(key: 'CONFIGURATION_LIST', value: "${configurationList}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
             envVar(key: 'SOURCE_CODE_DIR', value: "${sourcecodeDir}"),
-            envVar(key: 'BAR_REPO', value: "${barRepo}"),
         ]),
         containerTemplate(name: 'ace-bar-builder', image: "${barBuilderImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
           envVars: [
