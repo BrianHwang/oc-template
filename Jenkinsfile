@@ -81,14 +81,21 @@ podTemplate(
             }
         }
         stage('Upload Bar File') {
-            container("oc-deploy") {
+            container("jnlp") {
                     sh label: '', script: '''#!/bin/bash
                         echo "********  Upload Bar File ******************************************************"
                         set -e 
-                        ls -lha
+                        
                         BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
+                        pwd
+                        ls -lha
                         git clone $BAR_REPO
-                        git add $BAR_FILE
+                        cp -p $BAR_FILE ace-bar
+                        cd ace-bar
+                        echo "after clone"
+                        ls -lha
+                        git add $BAR_FILE ace-bar
+
                         git commit -m "jenkin build commit bar file"
                         git push origin main
                         '''
