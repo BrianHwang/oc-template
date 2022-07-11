@@ -3,7 +3,7 @@ def barBuilderImage = "image-registry.openshift-image-registry.svc:5000/cp4i-poc
 
 def gitRepo = "https://github.com/BrianHwang/oc-template.git"
 def aceSourceCodeRepo = "https://github.com/BrianHwang/MC_HelloWorld.git"
-def barRepo = "git@github.com:BrianHwang/ace-bar.git"
+def barRepo = "https://github.com/BrianHwang/ace-bar.git"
 
 def namespace = "cp4i-poc"
 def serverName = "helloworld"
@@ -90,11 +90,12 @@ podTemplate(
                     sh label: '', script: '''#!/bin/bash
                         echo "********  Upload Bar File ******************************************************"
                         set -e 
-                        git config --global user.email "brian_hwang@itss.vic.gov.au"
-                        git config user.name brian_hwang
                         BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
+
+                        cd /home/jenkins/workspace/ace-build
                         pwd
                         ls -lha
+
                         git clone $BAR_REPO
                         echo "after clone"
                         ls -lha
@@ -102,6 +103,12 @@ podTemplate(
                         cd ace-bar
                         pwd
                         ls -lha
+                        
+                        git config --global user.email "brian_hwang@itss.vic.gov.au"
+                        git config user.name brian_hwang
+                        
+                        
+                        
                         git add $BAR_FILE
                         git status
                         
