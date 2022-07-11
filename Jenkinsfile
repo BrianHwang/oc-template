@@ -30,6 +30,7 @@ podTemplate(
             envVar(key: 'GIT_ACE_REPO', value: "${aceSourceCodeRepo}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
             envVar(key: 'BAR_REPO', value: "${barRepo}"),
+            envVar(key: 'APP_NAME', value: "${appName}"),
         ]),
         containerTemplate(name: 'oc-deploy', image: "${ocImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
           envVars: [
@@ -94,7 +95,7 @@ podTemplate(
                         ls -lha
                         cp -p $BAR_FILE ace-bar
                         cd ace-bar
-                        
+                        pwd
                         ls -lha
                         git add $BAR_FILE ace-bar
 
