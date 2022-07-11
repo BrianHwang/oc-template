@@ -31,8 +31,7 @@ podTemplate(
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
             envVar(key: 'BAR_REPO', value: "${barRepo}"),
             envVar(key: 'APP_NAME', value: "${appName}"),
-            envVar(key: 'GIT_USER', value: "id.brian.hwang@gmail.com"),
-            envVar(key: 'GIT_PASSWORD', value: "Selmar@1977"),
+
         ]),
         containerTemplate(name: 'oc-deploy', image: "${ocImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
           envVars: [
@@ -85,7 +84,7 @@ podTemplate(
         }
         stage('Upload Bar File') {
             container("jnlp") {
-                withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', passwordVariable: 'Selmar@1977', usernameVariable: 'id.brian.hwang@gmail.com')]) {
+                withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USER')]) {
                     sh label: '', script: '''#!/bin/bash
                         echo "********  Upload Bar File ******************************************************"
                         set -e 
