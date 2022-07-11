@@ -90,7 +90,7 @@ podTemplate(
                         BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
                         pwd
                         ls -lha
-                        git clone $BAR_REPO
+                        git clone https://id.brian.hwang@gmail.com:Selmar@1977@https://github.com/BrianHwang/ace-bar.git
                         echo "after clone"
                         ls -lha
                         cp -p $BAR_FILE ace-bar
@@ -99,8 +99,8 @@ podTemplate(
                         ls -lha
                         git add $BAR_FILE
                         git status
-                        git commit -m "jenkin build commit bar file"
-                        git push  -u -f origin main
+                        git commit -m "jenkin build bar file"
+                        git push origin main
                         '''
                 
             }
