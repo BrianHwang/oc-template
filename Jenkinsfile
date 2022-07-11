@@ -3,7 +3,7 @@ def barBuilderImage = "image-registry.openshift-image-registry.svc:5000/cp4i-poc
 
 def gitRepo = "https://github.com/BrianHwang/oc-template.git"
 def aceSourceCodeRepo = "https://github.com/BrianHwang/MC_HelloWorld.git"
-def barRepo = "https://github.com/BrianHwang/ace-bar.git"
+def barRepo = "git@github.com:BrianHwang/ace-bar.git"
 
 def namespace = "cp4i-poc"
 def serverName = "helloworld"
@@ -105,8 +105,6 @@ podTemplate(
                         git add $BAR_FILE
                         git status
                         
-                        git config --global user.email "brian_hwang@itss.vic.gov.au"
-                        git config user.name brian_hwang
 
                         git commit -m "jenkin build bar file"
                         git push origin main
