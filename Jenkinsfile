@@ -56,6 +56,7 @@ podTemplate(
                     echo "**************************************************************"
                     git clone $GIT_REPO
                     git clone $GIT_ACE_REPO
+                    git clone $BAR_REPO
                     cp -p $PROJECT_DIR/template/ace-template.yaml.temp $PROJECT_DIR
                     pwd
                     ls -la
@@ -84,7 +85,8 @@ podTemplate(
         }
         stage('Upload Bar File') {
             container("jnlp") {
-                withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USER')]) {
+                
+                
                     sh label: '', script: '''#!/bin/bash
                         echo "********  Upload Bar File ******************************************************"
                         set -e 
@@ -102,12 +104,14 @@ podTemplate(
                         ls -lha
                         git add $BAR_FILE
                         git status
+                        
+                        git config --global user.email "brian_hwang@itss.vic.gov.au"
+                        git config user.name brian_hwang
+
                         git commit -m "jenkin build bar file"
-                        def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
-                        echo $encodedPassword
-                        git push https://${GIT_USER}:${encodedPassword}@github.com/BrianHwang/ace-bar.git
+                        git push origin main
                         '''
-                }
+                  
             }
         }	
         stage('Deploy Intergration Server') {
