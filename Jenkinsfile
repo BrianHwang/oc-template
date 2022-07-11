@@ -90,9 +90,11 @@ podTemplate(
                         pwd
                         ls -lha
                         git clone $BAR_REPO
+                        echo "after clone"
+                        ls -lha
                         cp -p $BAR_FILE ace-bar
                         cd ace-bar
-                        echo "after clone"
+                        
                         ls -lha
                         git add $BAR_FILE ace-bar
 
