@@ -70,7 +70,8 @@ podTemplate(
                     export LICENSE=accept
                     pwd
                     source /opt/ibm/ace-12/server/bin/mqsiprofile
-                    cd $SOURCE_CODE_DIR
+                    cd /home/jenkins/workspace/ace-build/$SOURCE_CODE_DIR
+                    pwd
                     BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
                     mqsicreatebar -data . -b $BAR_FILE -a $APP_NAME -cleanBuild -trace -configuration . 
                     ls -lha
@@ -80,11 +81,10 @@ podTemplate(
         stage('Upload Bar File') {
             container("oc-deploy") {
                     sh label: '', script: '''#!/bin/bash
-                        set -e
-                        cd $SOURCE_CODE_DIR
+                        set -e 
                         ls -lha
                         echo "*** TODO : FILE UPLOAD *******
-                         '''
+                        '''
                 
             }
         }	
