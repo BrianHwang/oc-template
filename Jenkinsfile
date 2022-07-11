@@ -90,7 +90,7 @@ podTemplate(
                         BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
                         pwd
                         ls -lha
-                        git clone https://id.brian.hwang@gmail.com:Selmar@1977@https://github.com/BrianHwang/ace-bar.git
+                        git clone https%3A%2F%2Fid.brian.hwang%40gmail.com%3ASelmar%401977%40github.com%2FBrianHwang%2Face-bar.git
                         echo "after clone"
                         ls -lha
                         cp -p $BAR_FILE ace-bar
