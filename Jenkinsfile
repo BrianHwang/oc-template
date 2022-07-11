@@ -118,23 +118,24 @@ podTemplate(
                         
                     '''
                     
-                
-            }
-        }
-        stage('Upload Bar File') {
-            container("jnlp") {
-                    sh 'echo "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"'
-                    sh 'cd /home/jenkins/workspace/ace-build/ace-bar'
-                    sh 'pwd'
-                    withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         script {
                             env.encodedPass=URLEncoder.encode(PASS, "UTF-8")
+                            env.USER_NAME=USER
                             sh 'echo ${encodedPass}'  
                         }
                         sh 'echo ${encodedPass}'  
                     }
-                    sh 'echo ${encodedPass}'
-                    sh 'git push https://${USER}:${encodedPass}@github.com/BrianHwang/ace-bar.git' 
+
+                 sh label: '', script: '''#!/bin/bash
+                    echo "******** AGIN ******************************************************"
+                    pwd
+                    cd /home/jenkins/workspace/ace-build/ace-bar
+                    pwd
+                    git push https://${USER_NAME}:${encodedPass}@github.com/BrianHwang/ace-bar.git
+                 '''
+
+
             }
         }	
         stage('Deploy Intergration Server') {
