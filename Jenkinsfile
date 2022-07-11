@@ -84,7 +84,7 @@ podTemplate(
         }
         stage('Upload Bar File') {
             container("jnlp") {
-
+                withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USER')]) {
                     sh label: '', script: '''#!/bin/bash
                         echo "********  Upload Bar File ******************************************************"
                         set -e 
@@ -103,13 +103,6 @@ podTemplate(
                         git add $BAR_FILE
                         git status
                         git commit -m "jenkin build bar file"
-                      
-                        
-                        '''
-                
-                withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USER')]) {
-                    sh label: '', script: '''#!/bin/bash
-                        echo "********  push Bar File ******************************************************"
                         def encodedPassword = URLEncoder.encode("$GIT_PASSWORD",'UTF-8')
                         echo $encodedPassword
                         git push https://${GIT_USER}:${encodedPassword}@github.com/BrianHwang/ace-bar.git
