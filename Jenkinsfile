@@ -41,6 +41,7 @@ podTemplate(
             envVar(key: 'CONFIGURATION_LIST', value: "${configurationList}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
             envVar(key: 'SOURCE_CODE_DIR', value: "${sourcecodeDir}"),
+            envVar(key: 'APP_NAME', value: "${appName}"),
         ]),
         containerTemplate(name: 'ace-bar-builder', image: "${barBuilderImage}", workingDir: "/home/jenkins", ttyEnabled: true, 
           envVars: [
@@ -96,8 +97,8 @@ podTemplate(
                         pwd
                         ls -lha
 
-                        git clone $BAR_REPO
-                        echo "after clone"
+                       
+
                         ls -lha
                         cp -p $BAR_FILE ace-bar
                         cd ace-bar
@@ -114,9 +115,15 @@ podTemplate(
                         
 
                         git commit -m "jenkin build bar file"
-                        git push origin main
-                        '''
-                  
+                        
+                    '''
+                    
+                    withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                        script {
+                            env.encodedPass=URLEncoder.encode(PASS, "UTF-8")
+                        }
+                       sh 'git push https://${USER}:${encodedPass}@github.com/BrianHwang/ace-bar.git'
+                    } 
             }
         }	
         stage('Deploy Intergration Server') {
@@ -124,7 +131,8 @@ podTemplate(
                 sh label: '', script: '''#!/bin/bash                    
 					set -e
                     BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
-					echo "****************************************************************"
+					echo "******  Deploy Intergration Server **********************************************************"
+                    pwd
                     cd $PROJECT_DIR
                     echo $BAR_FILE
                     cat ace-template.yaml.temp
