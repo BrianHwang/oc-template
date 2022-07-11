@@ -86,7 +86,7 @@ podTemplate(
                     sh label: '', script: '''#!/bin/bash
                         echo "********  Upload Bar File ******************************************************"
                         set -e 
-                        
+                        git config --global user.email "brian_hwang@itss.vic.gov.au"
                         BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
                         pwd
                         ls -lha
