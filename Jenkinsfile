@@ -97,8 +97,8 @@ podTemplate(
                         cd ace-bar
                         pwd
                         ls -lha
-                        git add $BAR_FILE ace-bar
-
+                        git add $BAR_FILE
+                        git status
                         git commit -m "jenkin build commit bar file"
                         git push origin main
                         '''
