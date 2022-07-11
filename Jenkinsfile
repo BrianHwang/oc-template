@@ -24,8 +24,6 @@ podTemplate(
     containers: [
         containerTemplate(name: 'jnlp', image: "jenkins/jnlp-slave:latest", ttyEnabled: true, workingDir: "/home/jenkins", 
 		  envVars: [
-            envVar(key: 'HOME', value: '/home/jenkins'),
-            envVar(key: 'GIT_DOMAIN', value: "${gitDomain}"),
             envVar(key: 'GIT_REPO', value: "${gitRepo}"),
             envVar(key: 'GIT_ACE_REPO', value: "${aceSourceCodeRepo}"),
             envVar(key: 'PROJECT_DIR', value: "${projectDir}"),
@@ -55,6 +53,8 @@ podTemplate(
             container("jnlp") {
                 sh """
                     echo "**************************************************************"
+                    echo "     Git Checkout"
+                    echo "**************************************************************"
                     git clone $GIT_REPO
                     git clone $GIT_ACE_REPO
                     git clone $BAR_REPO
@@ -64,13 +64,15 @@ podTemplate(
                     cd $PROJECT_DIR
                     pwd
                     ls -la
-                    echo "**************************************************************"
                 """
             }
         }
         stage('Build Bar File') {
             container("ace-bar-builder") {
                 sh label: '', script: '''#!/bin/bash
+                    echo "**************************************************************"
+                    echo "     Build Bar File"
+                    echo "**************************************************************"
                     Xvfb -ac :99 &
                     export DISPLAY=:99
                     export LICENSE=accept
@@ -87,68 +89,64 @@ podTemplate(
         stage('Upload Bar File') {
             container("jnlp") {
                 
-                
-                    sh label: '', script: '''#!/bin/bash
-                        echo "********  Upload Bar File ******************************************************"
-                        set -e 
-                        BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
-
-                        cd /home/jenkins/workspace/ace-build
-                        pwd
-                        ls -lha
-
-                       
-
-                        ls -lha
-                        cp -p $BAR_FILE ace-bar
-                        cd ace-bar
-                        pwd
-                        ls -lha
-                        
-                        git config --global user.email "brian_hwang@itss.vic.gov.au"
-                        git config user.name brian_hwang
-                        
-                        
-                        
-                        git add $BAR_FILE
-                        git status
-                        
-
-                        git commit -m "jenkin build bar file"
-                        
-                    '''
+                sh label: '', script: '''#!/bin/bash
+                    echo "**************************************************************"
+                    echo "     Upload Bar File"
+                    echo "**************************************************************"
+                    BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
                     
+                    set -e 
+                    cd /home/jenkins/workspace/ace-build
+                    pwd
+                    ls -lha
+
+                    cp -p $BAR_FILE ace-bar
+                    cd ace-bar
+                    pwd
+                    ls -lha
+                        
+                    git config --global user.email "brian_hwang@itss.vic.gov.au"
+                    git config user.name brian_hwang
+                        
+                    git add $BAR_FILE
+                    git status
+                        
+                    git commit -m "jenkin build bar file"
+                        
+                '''
+                
                 withCredentials([usernamePassword(credentialsId: 'brian_github_credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                        script {
+                    script {
                             env.encodedPass=URLEncoder.encode(PASS, "UTF-8")
                             env.USER_NAME=USER
-                            sh 'echo ${encodedPass}'  
-                        }
-                        sh 'echo ${encodedPass}'  
                     }
+                }
 
-                 sh label: '', script: '''#!/bin/bash
-                    echo "******** AGIN ******************************************************"
+                sh label: '', script: '''#!/bin/bash
+                    
                     pwd
                     cd /home/jenkins/workspace/ace-build/ace-bar
                     pwd
                     git push https://${USER_NAME}:${encodedPass}@github.com/BrianHwang/ace-bar.git
                  '''
 
-
             }
         }	
         stage('Deploy Intergration Server') {
             container("oc-deploy") {
-                sh label: '', script: '''#!/bin/bash                    
-					set -e
+                sh label: '', script: '''#!/bin/bash
+                    echo "**************************************************************"
+                    echo "     Deploy Intergration Server"
+                    echo "**************************************************************"                
+					
                     BAR_FILE="${APP_NAME}_${BUILD_NUMBER}.bar"
-					echo "******  Deploy Intergration Server **********************************************************"
+                    
+                    set -e
                     pwd
                     cd $PROJECT_DIR
                     echo $BAR_FILE
                     cat ace-template.yaml.temp
-					echo "****************************************************************"
+					
                     sed -e "s/{{NAME}}/$SERVER_NAME/g" \
                         -e "s/{{NAMESPACE}}/$NAMESPACE/g" \
                         -e "s/{{BAR_NAME}}/$BAR_FILE/g" \
@@ -157,10 +155,8 @@ podTemplate(
                     
                     cat ace.yaml
                    
-					echo "****************************************************************"
-					
 					oc apply -f ace.yaml
-                    '''
+                '''
             }
         }
     }
