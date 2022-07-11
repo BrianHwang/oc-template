@@ -100,7 +100,7 @@ podTemplate(
                         git add $BAR_FILE
                         git status
                         git commit -m "jenkin build commit bar file"
-                        git push origin main
+                        git push  -u -f origin main
                         '''
                 
             }
